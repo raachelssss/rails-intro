@@ -8,30 +8,28 @@ class MoviesController < ApplicationController
   
     def index
       @all_ratings = Movie.get_ratings
+      @ratings_to_show = []
       @selected = ""
-      # change? 
-      if not params[:ratings].nil? and params[:ratings] != session[:ratings]
-        session[:ratings_to_show_hash] = params[:ratings]
-        @ratings_to_show = params[:ratings]
-      end
-      @ratings_to_show = params[:ratings].nil? ?  @all_ratings : params[:ratings].keys 
-      #@movies = Movie.with_ratings(@ratings_to_show)
-      if not params[:ratings].nil? and params[:order] != session[:selected]
-        session[:selected] = params[:order]
-        @selected = params[:order]
-      end
-      #@param_ratings =  params[:ratings].nil? ? {} : params[:ratings]
-      #@sort = params[:sort].nil? ? "" : params[:sort]
-      if !session[:ratings_to_show_hash].nil?
+      if(!params[:ratings].nil?)
+        if (params[:ratings] != session[:ratings_to_show_hash])
+          session[:ratings_to_show_hash] = params[:ratings]
+          @ratings_to_show = params[:ratings]
+        end
+        if (params[:order] != session[:selected])
+          session[:selected] = params[:order]
+          @selected = params[:order]
+        end
+
+      elsif(!session[:ratings_to_show_hash].nil?)
         redirect_to movies_path(order: session[:selected], ratings: session[:ratings_to_show_hash])
-      end
-      if params[:ratings].nil? and session[:ratings_to_show_hash].nil?
+      else
         if (!params[:ratings].nil?)
           @ratings_to_show = params[:ratings].keys
         end
         @selected = params[:order]
-      end 
+      end
 
+      # Filtering by ratings
       if (!params[:ratings].nil?)
         @ratings_to_show = params[:ratings].keys
         @movies = Movie.with_ratings(params[:ratings].keys) #@movies = Movie.all
