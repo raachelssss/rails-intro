@@ -7,6 +7,8 @@ class MoviesController < ApplicationController
     end
   
     def index
+      @all_ratings = Movie.get_ratings
+      
       @movies = Movie.all
     end
   
