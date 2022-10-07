@@ -11,6 +11,8 @@ class MoviesController < ApplicationController
       # change? 
       @ratings_to_show = params[:ratings].nil? ?  @all_ratings : params[:ratings].keys 
       @movies = Movie.with_ratings(@ratings_to_show)
+      session[:ratings] =  params[:ratings]
+      
     end
   
     def new
