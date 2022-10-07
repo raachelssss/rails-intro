@@ -1,17 +1,16 @@
 class Movie < ActiveRecord::Base
-  attr_accessor :title, :rating, :description, :release_date
+  #attr_accessor :title, :rating, :description, :release_date
   def self.get_ratings
-    return %w[G PG PG-13 R]
-    end
-  def self.with_ratings(ratings_list)
-    display = []
-    ratings_list.each_with_index  do |v,i| 
-      display[i] = v
-      end
-    if not display.length == 0
-      where(rating:display)
-    else
-      where("")
-    end
+    return ['G','PG','PG-13','R']
   end
+
+  def self.with_ratings(ratings_list)
+    if not ratings_list.nil? and ratings_list.is_a? Array
+      ratings_list.each { |r| r.upcase }
+      return self.where(rating: ratings_list)
+    else
+      return self.all
+    end 
+  end
+
 end

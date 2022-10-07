@@ -8,24 +8,50 @@ class MoviesController < ApplicationController
   
     def index
       @all_ratings = Movie.get_ratings
+      @selected = ""
       # change? 
+      if not params[:ratings].nil? and params[:ratings] != session[:ratings]
+        session[:ratings_to_show_hash] = params[:ratings]
+        @ratings_to_show = params[:ratings]
+      end
       @ratings_to_show = params[:ratings].nil? ?  @all_ratings : params[:ratings].keys 
       #@movies = Movie.with_ratings(@ratings_to_show)
-      @param_ratings =  params[:ratings].nil? ? {} : params[:ratings]
-      @sort = params[:sort].nil? ? "" : params[:sort]
-    
-      unless (params[:sort].present? && params[:ratings].present?)
-        h = {}.compare_by_identity
-        @all_ratings.each_with_index{|k,v| h[k] = v} 
-        redirect_to movies_path(sort: session[:sort] || "id" , ratings: session[:ratings] || h)
-        return
-        
+      if not params[:ratings].nil? and params[:order] != session[:selected]
+        session[:selected] = params[:order]
+        @selected = params[:order]
       end
-      session[:ratings] =  params[:ratings]
-      session[:sort] = params[:sort]
-      
-      
-      @movies = Movie.with_ratings(@ratings_to_show).order(@sort)
+      #@param_ratings =  params[:ratings].nil? ? {} : params[:ratings]
+      #@sort = params[:sort].nil? ? "" : params[:sort]
+      if !session[:ratings_to_show_hash].nil?
+        redirect_to movies_path(order: session[:selected], ratings: session[:ratings_to_show_hash])
+      end
+      if params[:ratings].nil? and session[:ratings_to_show_hash].nil?
+        if (!params[:ratings].nil?)
+          @ratings_to_show = params[:ratings].keys
+        end
+        @selected = params[:order]
+      end 
+
+      if (!params[:ratings].nil?)
+        @ratings_to_show = params[:ratings].keys
+        @movies = Movie.with_ratings(params[:ratings].keys) #@movies = Movie.all
+      else
+        @ratings_to_show = @all_ratings
+        @movies = Movie.with_ratings(nil)
+      end
+  
+      # Ordering by title or release_date
+      if(params[:order] == 'title')
+        @selected = "title"
+        @movies = @movies.order(:title)
+      end
+      if(params[:order] == 'release_date')
+        @selected = "release_date"
+        @movies = @movies.order(:release_date)
+      end
+  
+      session[:ratings] = @ratings_to_show.to_h {|i| [i, '1']}
+      session[:selected] = @selected
 
     end
   
