@@ -18,11 +18,11 @@
   <thead>
     <tr>
       <th class = "<%= (@selected == 'title') ? ('hilite bg-warning') : ('') %>" >
-        <a id="title_header", href="<%= movies_path(order: 'title', ratings: @ratings_to_show.to_h {|i| [i, '1']}) %>">Movie Title</a>
+        <a id="title_header", href="<%= movies_path(order: 'title', ratings: @ratings_to_show.to_h {|s| [s.ord, s]}) %>">Movie Title</a>
       </th>
       <th>Rating</th>
       <th class = "<%= (@selected == 'release_date') ? ('hilite bg-warning') : ('') %>" >
-        <a id="release_date_header", href="<%= movies_path(order: 'release_date', ratings: @ratings_to_show.to_h {|i| [i, '1']}) %>">Release Date</a>
+        <a id="release_date_header", href="<%= movies_path(order: 'release_date', ratings: @ratings_to_show.to_h {|s| [s.ord, s]}) %>">Release Date</a>
       </th>
       <th>More Info</th>
     </tr>

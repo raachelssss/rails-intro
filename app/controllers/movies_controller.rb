@@ -48,7 +48,7 @@ class MoviesController < ApplicationController
         @movies = @movies.order(:release_date)
       end
   
-      session[:ratings] = @ratings_to_show.to_h {|i| [i, '1']}
+      session[:ratings] = @ratings_to_show.to_h {|s| [s.ord, s]}
       session[:selected] = @selected
 
     end
