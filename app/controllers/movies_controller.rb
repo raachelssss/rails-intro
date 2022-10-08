@@ -8,14 +8,16 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.get_ratings
-     link = false
+    null = ""
+    @movies = null
+    link = false
+
     if not params[:ratings].nil?
       session[:ratings] = params[:ratings]
     else
       link = true
       @ratings_to_show = @all_ratings.to_h {|r| [r, '1']}
     end
-    
     if not session[:ratings].nil?
       session[:ratings] = session[:ratings]
     else
@@ -23,15 +25,15 @@ class MoviesController < ApplicationController
     end
     @ratings_to_show = session[:ratings]
 
-    if params[:filter].nil? 
-      link = true
-      @filter_by = ""
-    else
+    if not params[:filter].nil? 
       session[:filter] = params[:filter]
+    else
+      link = true
+      @filter_by = null
     end
     
     if not session[:filter]
-      session[:filter] = ""
+      session[:filter] = null
     else
       session[:filter] = session[:filter]
     end
