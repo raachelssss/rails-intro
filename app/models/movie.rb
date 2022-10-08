@@ -4,8 +4,7 @@ class Movie < ActiveRecord::Base
   end
 
   def self.with_ratings(ratings_list)
-    ratings_list_keys = ratings_list.keys
-    self.where(rating: ratings_list_keys)
+    self.where(rating: ratings_list.keys)
 
   end
 
