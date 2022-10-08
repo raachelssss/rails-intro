@@ -17,10 +17,12 @@ class MoviesController < ApplicationController
       session[:ratings] = params[:ratings]
     end
     
-    session[:ratings] = if session[:ratings].nil? 
-                          @all_ratings.to_h {|r| [r, '1']}
-                        else 
-                          session[:ratings]
+    if session[:ratings].nil?
+      session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
+    else
+      session[:ratings] = session[:ratings]
+    end
+
 
     @ratings_to_show = session[:ratings]
 
