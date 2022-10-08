@@ -7,41 +7,37 @@ class MoviesController < ApplicationController
   end
 
   def index
-    # @movies = Movie.all
-    @all_ratings = Movie.all_ratings
-    redirect = false
-    if params[:ratings].nil?
-      redirect = true
-      @ratings_to_show = @all_ratings.to_h {|r| [r, '1']}
-    else
+    @all_ratings = Movie.get_ratings
+     link = false
+    if not params[:ratings].nil?
       session[:ratings] = params[:ratings]
+    else
+      link = true
+      @ratings_to_show = @all_ratings.to_h {|r| [r, '1']}
     end
     
-    if session[:ratings].nil?
-      session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
-    else
+    if not session[:ratings].nil?
       session[:ratings] = session[:ratings]
+    else
+      session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
     end
-
-
     @ratings_to_show = session[:ratings]
 
     if params[:filter].nil? 
-      redirect = true
+      link = true
       @filter_by = ""
     else
       session[:filter] = params[:filter]
     end
     
-    if session[:filter]
-      session[:filter] = session[:filter]
-    else
+    if not session[:filter]
       session[:filter] = ""
+    else
+      session[:filter] = session[:filter]
     end
 
     @filter_by = session[:filter]
-    
-    if redirect
+    if link
       redirect_to movies_path({:filter=> @filter_by, :ratings=>@ratings_to_show})
     end
     
