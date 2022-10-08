@@ -16,7 +16,8 @@ class MoviesController < ApplicationController
     else
       session[:ratings] = params[:ratings]
     end
-    session[:ratings] = session[:ratings].nil? (@all_ratings.to_h {|r| [r, '1']}) : (session[:ratings])
+    
+    session[:ratings] = (session[:ratings].nil? @all_ratings.to_h {|r| [r, '1']} : session[:ratings])
 
     @ratings_to_show = session[:ratings]
 
