@@ -7,18 +7,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    # @movies = Movie.all
-    @all_ratings = Movie.all_ratings
+    @all_ratings = Movie.get_ratings
     redirect = false
     if params[:ratings].nil?
       redirect = true
-      @ratings_to_show = Hash[@all_ratings.collect {|r| [r, 1]}]
+      @ratings_to_show = @all_ratings.to_h {|r| [r, '1']}
     else
       session[:ratings] = params[:ratings]
     end
     
     if session[:ratings].nil?
-      session[:ratings] = Hash[@all_ratings.collect {|r| [r, 1]}]
+      session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
     else
       session[:ratings] = session[:ratings]
     end
