@@ -23,7 +23,6 @@ class MoviesController < ApplicationController
     else
       session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
     end
-    @ratings_to_show = session[:ratings]
 
     if not params[:filter].nil? 
       session[:filter] = params[:filter]
@@ -37,12 +36,12 @@ class MoviesController < ApplicationController
     else
       session[:filter] = session[:filter]
     end
-
+    @ratings_to_show = session[:ratings]
     @filter_by = session[:filter]
     if link
-      redirect_to movies_path({:filter=> @filter_by, :ratings=>@ratings_to_show})
+      redirect_to movies_path({:filter=> @filter_by,
+       :ratings=>@ratings_to_show})
     end
-    
     @movies = Movie.with_ratings(@ratings_to_show).order(@filter_by)
 
   end
