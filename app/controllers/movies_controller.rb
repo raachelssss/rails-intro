@@ -28,7 +28,7 @@ class MoviesController < ApplicationController
 
     if params[:filter].nil? 
       redirect = true
-      @sort_by = ""
+      @filter_by = ""
     else
       session[:filter] = params[:filter]
     end
@@ -39,7 +39,7 @@ class MoviesController < ApplicationController
       session[:filter] = ""
     end
 
-    @sort_by = session[:filter]
+    @filter_by = session[:filter]
     
     if redirect
       redirect_to movies_path({:filter=> @filter_by, :ratings=>@ratings_to_show})
