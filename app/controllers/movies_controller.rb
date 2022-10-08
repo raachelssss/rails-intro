@@ -15,35 +15,24 @@ class MoviesController < ApplicationController
     else
       session[:ratings] = params[:ratings]
     end
-    
-    if session[:ratings].nil?
-      session[:ratings] = @all_ratings.to_h {|r| [r, '1']}
-    else
-      session[:ratings] = session[:ratings]
-    end
 
+    session[:ratings] = session[:ratings].nil? @all_ratings.to_h {|r| [r, '1']} : session[:ratings]
     @ratings_to_show = session[:ratings]
 
-    if params[:sort].nil? 
+    if params[:order].nil? 
       redirect = true
-      @sort_by = ""
+      @filter = ""
     else
-      session[:sort] = params[:sort]
+      session[:order] = params[:order]
     end
-    
-    if session[:sort]
-      session[:sort] = session[:sort]
-    else
-      session[:sort] = ""
-    end
-
-    @sort_by = session[:sort]
+    session[:order] = session[:order]? session[:order] : ""
+    @filter = session[:order]
     
     if redirect
-      redirect_to movies_path({:sort=> @sort_by, :ratings=>@ratings_to_show})
+      redirect_to movies_path({:order=> @filter, :ratings=>@ratings_to_show})
     end
     
-    @movies = Movie.with_ratings(@ratings_to_show.keys).order(@sort_by)
+    @movies = Movie.with_ratings(@ratings_to_show).order(@filter)
 
   end
 
